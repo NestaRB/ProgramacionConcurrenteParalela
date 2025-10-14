@@ -1,3 +1,5 @@
+package Lab02;
+
 // ============================================================================
 class EjemploMuestraNumeros {
 // ============================================================================
@@ -48,14 +50,14 @@ class EjemploMuestraNumeros {
 
       /*
         //Por bloques
-      MiHebra[] vh = new MiHebra[numHebras];
+      Lab02.MiHebra[] vh = new Lab02.MiHebra[numHebras];
       int tam = (n + numHebras - 1) / numHebras;
       for(int i = 0; i < numHebras; i++)
       {
 
           int inicio = tam * i;
           int fin = Math.min( inicio +tam, n);
-          vh[i] = new MiHebra( inicio, fin, i );
+          vh[i] = new Lab02.MiHebra( inicio, fin, i );
           vh[i].start();
       }
        */
@@ -85,10 +87,10 @@ class MiHebra extends Thread
 }
 /*
   //Bloque
-class MiHebra extends Thread
+class Lab02.MiHebra extends Thread
 {
     int inicio, fin, miId;
-    public MiHebra(int inicio, int fin, int miId)
+    public Lab02.MiHebra(int inicio, int fin, int miId)
     {
         this.inicio = inicio;
         this.fin = fin;
@@ -98,7 +100,7 @@ class MiHebra extends Thread
     {
         for( int i = inicio; i < fin ; i++ )
         {
-            System.out.println( "MiHebra " + miId + ": " + i );
+            System.out.println( "Lab02.MiHebra " + miId + ": " + i );
         }
     }
 
