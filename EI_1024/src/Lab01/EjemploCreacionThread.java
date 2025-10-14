@@ -1,3 +1,5 @@
+package Lab01;
+
 class MiHebra extends Thread
 {
     private int miId;

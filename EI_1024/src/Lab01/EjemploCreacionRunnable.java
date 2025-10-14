@@ -1,3 +1,5 @@
+package Lab01;
+
 class MiRun implements Runnable
 {
     private int miId;

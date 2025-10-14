@@ -5,7 +5,7 @@ class EjemploMuestraNumeros {
 // ============================================================================
 
   // --------------------------------------------------------------------------
-  static void main(String[] args) {
+  public static void main(String[] args) {
     int  n, numHebras;
 
     // Comprobacion y extraccion de los argumentos de entrada.
@@ -29,10 +29,10 @@ class EjemploMuestraNumeros {
     }
 
         //Ciclica
-      MiHebra[] vh = new MiHebra[numHebras];
+      MiHebra1_1[] vh = new MiHebra1_1[numHebras];
       for(int i = 0; i < numHebras; i++)
       {
-          vh[i] = new MiHebra( numHebras, n, i );
+          vh[i] = new MiHebra1_1( numHebras, n, i );
           vh[i].start();
       }
 
@@ -50,7 +50,7 @@ class EjemploMuestraNumeros {
 
       /*
         //Por bloques
-      Lab02.MiHebra[] vh = new Lab02.MiHebra[numHebras];
+      Lab02.MiHebra1_2[] vh = new MiHebra1_2[numHebras];
       int tam = (n + numHebras - 1) / numHebras;
       for(int i = 0; i < numHebras; i++)
       {
@@ -66,11 +66,11 @@ class EjemploMuestraNumeros {
 
 
   //Ciclica
-class MiHebra extends Thread
+class MiHebra1_1 extends Thread
  {
     int numHebras, miId, n;
 
-    public MiHebra( int numHebras, int n , int miId )
+    public MiHebra1_1(int numHebras, int n , int miId )
     {
         this.numHebras = numHebras;
         this.miId = miId;
@@ -84,13 +84,16 @@ class MiHebra extends Thread
             System.out.println( "Hebra " + miId + ": " + i);
         }
     }
+
+
+
 }
-/*
+
   //Bloque
-class Lab02.MiHebra extends Thread
+class MiHebra1_2 extends Thread
 {
     int inicio, fin, miId;
-    public Lab02.MiHebra(int inicio, int fin, int miId)
+    public MiHebra1_2(int inicio, int fin, int miId)
     {
         this.inicio = inicio;
         this.fin = fin;
@@ -105,4 +108,3 @@ class Lab02.MiHebra extends Thread
     }
 
 }
- */

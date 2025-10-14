@@ -1,3 +1,5 @@
+package Lab01;
+
 class MiHebraDaemon extends Thread
 {
     private int miId;
