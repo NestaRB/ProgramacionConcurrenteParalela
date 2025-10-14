@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Programacion concurrente paralela.iml" filepath="$PROJECT_DIR$/Programacion concurrente paralela.iml" />
+      <module fileurl="file://$PROJECT_DIR$/la2/la2.iml" filepath="$PROJECT_DIR$/la2/la2.iml" />
     </modules>
   </component>
 </project>
