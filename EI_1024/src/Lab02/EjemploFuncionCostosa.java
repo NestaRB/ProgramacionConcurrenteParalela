@@ -5,9 +5,9 @@ class EjemploFuncionCostosa {
 // ============================================================================
 
     // --------------------------------------------------------------------------
-    public static void main(String args[]) throws InterruptedException {
+    public static void main(String args[]) {
         int n, numHebras;
-        long t1, t2;
+        long t1, t2, t3, t4;
         double sumaX, sumaY, ts, tc, tb;
 
         // Comprobacion y extraccion de los argumentos de entrada.
@@ -80,7 +80,11 @@ class EjemploFuncionCostosa {
         }
 
         for (int i = 0; i < numHebras; i++){
-            vh[i].join();
+            try {
+                vh[i].join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
         t2 = System.nanoTime();
         tc = ((double) (t2 - t1)) / 1.0e9;
@@ -99,6 +103,29 @@ class EjemploFuncionCostosa {
         //
         // (C) ....
         //
+        t3 = System.nanoTime();
+
+        MiHebra2_2[] vh2 = new MiHebra2_2[numHebras];
+        int tam = (n + numHebras - 1) / numHebras;
+        for (int i = 0; i < numHebras; i++) {
+            int inicio = tam * i;
+            int fin = Math.min( inicio +tam, n);
+            vh2[i] = new MiHebra2_2(i, inicio, fin, vectorX, vectorY);
+            vh2[i].start();
+        }
+
+        for (int i = 0; i < numHebras; i++){
+            try {
+                vh[i].join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        t4 =  System.nanoTime();
+        tb = ((double) (t4 - t3)) / 1.0e9;
+        System.out.println("Tiempo paralela bloques (seg.):              " + tb);
+        System.out.println("Incremento paralela bloques:                 " + ts/tb ); // (B)
+        imprimeResultado( vectorX, vectorY );
 
 
         System.out.println("Fin del programa.");
@@ -172,5 +199,26 @@ class MiHebra2_1 extends Thread {
         }
     }
 
+}
+
+class MiHebra2_2 extends Thread
+{
+    int inicio, fin, miId;
+    double[] vectorX, vectorY;
+    public MiHebra2_2(int miId, int inicio, int fin, double[] vectorX, double[] vectorY)
+    {
+        this.inicio = inicio;
+        this.fin = fin;
+        this.miId = miId;
+        this.vectorX = vectorX;
+        this.vectorY = vectorY;
+
+    }
+    public void run()
+    {
+        for (int i = inicio; i < fin ; i++ ) {
+            vectorY[i] = EjemploFuncionCostosa.evaluaFuncion(vectorX[i]);
+        }
+    }
 }
 
