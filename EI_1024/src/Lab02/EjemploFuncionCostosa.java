@@ -103,6 +103,8 @@ class EjemploFuncionCostosa {
         //
         // (C) ....
         //
+        inicializaVectorX(vectorX);
+        inicializaVectorY(vectorY);
         t3 = System.nanoTime();
 
         MiHebra2_2[] vh2 = new MiHebra2_2[numHebras];
