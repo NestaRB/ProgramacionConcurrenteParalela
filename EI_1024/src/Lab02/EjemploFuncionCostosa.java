@@ -55,7 +55,7 @@ class EjemploFuncionCostosa {
         t2 = System.nanoTime();
         ts = ((double) (t2 - t1)) / 1.0e9;
         System.out.println("Tiempo secuencial (seg.):                    " + ts);
-        imprimeResultado( vectorX, vectorY );
+        //imprimeResultado( vectorX, vectorY );
         //imprimeVector(vectorX);
         //imprimeVector(vectorY);
         // Comprueba el resultado.
@@ -90,7 +90,7 @@ class EjemploFuncionCostosa {
         tc = ((double) (t2 - t1)) / 1.0e9;
         System.out.println("Tiempo paralela ciclica (seg.):              " + tc);
         System.out.println("Incremento paralela ciclica:                 " + ts/tc ); // (B)
-        imprimeResultado( vectorX, vectorY );
+        //imprimeResultado( vectorX, vectorY );
         //imprimeVector(vectorX);
         //imprimeVector(vectorY);
         // Comprueba el resultado.
@@ -118,7 +118,7 @@ class EjemploFuncionCostosa {
 
         for (int i = 0; i < numHebras; i++){
             try {
-                vh[i].join();
+                vh2[i].join();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -127,7 +127,11 @@ class EjemploFuncionCostosa {
         tb = ((double) (t4 - t3)) / 1.0e9;
         System.out.println("Tiempo paralela bloques (seg.):              " + tb);
         System.out.println("Incremento paralela bloques:                 " + ts/tb ); // (B)
-        imprimeResultado( vectorX, vectorY );
+        //imprimeResultado( vectorX, vectorY );
+        sumaX = sumaVector(vectorX);
+        sumaY = sumaVector(vectorY);
+        System.out.println("Suma del vector X:          " + sumaX);
+        System.out.println("Suma del vector Y:          " + sumaY);
 
 
         System.out.println("Fin del programa.");
