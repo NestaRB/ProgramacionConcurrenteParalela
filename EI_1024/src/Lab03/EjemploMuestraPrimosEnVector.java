@@ -1,7 +1,8 @@
+package Lab03;
+
 // ===========================================================================
 public class EjemploMuestraPrimosEnVector {
 // ===========================================================================
-
   // -------------------------------------------------------------------------
   public static void main( String args[] ) {
     int     numHebras, vectOpt;
@@ -47,10 +48,11 @@ public class EjemploMuestraPrimosEnVector {
         System.out.println( "  Encontrado primo: " + vectorTrabajo[ i ] );
       }
     }
+
     t2 = System.nanoTime();
     ts = ( ( double ) ( t2 - t1 ) ) / 1.0e9;
     System.out.println( "Tiempo secuencial (seg.):                    " + ts );
-/*
+
     //
     // Implementacion paralela ciclica.
     //
@@ -58,11 +60,32 @@ public class EjemploMuestraPrimosEnVector {
     System.out.println( "Implementacion paralela ciclica." );
     t1 = System.nanoTime();
     // Gestion de hebras para la implementacion paralela ciclica
-    // (A) ....
+      MiHebraPrimoDistCiclica[] vh = new MiHebraPrimoDistCiclica[numHebras];
+      for(int i = 0; i < numHebras; i++)
+      {
+          vh[i] = new MiHebraPrimoDistCiclica(i, numHebras, vectorTrabajo );
+          vh[i].start();
+      }
+      for( int i = 0; i < numHebras; i++ )
+      {
+          try
+          {
+              vh[i].join();
+          }
+          catch(InterruptedException ex)
+          {
+              ex.printStackTrace();
+          }
+      }
     t2 = System.nanoTime();
     tc = ( ( double ) ( t2 - t1 ) ) / 1.0e9;
     System.out.println( "Tiempo paralela ciclica (seg.):              " + tc );
-    System.out.println( "Incremento paralela ciclica:                 " + ... ); // (B)
+    System.out.println( "Incremento paralela ciclica:                 " + tc/ts ); // (B)
+
+
+
+
+
     //
     // Implementacion paralela por bloques.
     //
@@ -71,7 +94,7 @@ public class EjemploMuestraPrimosEnVector {
     // Implementacion paralela dinamica.
     //
     // (D) ....
-*/
+
   }
 
   // -------------------------------------------------------------------------
@@ -93,7 +116,29 @@ public class EjemploMuestraPrimosEnVector {
 
 // Definicion de las Clases Hebras
 //
-// (E) ....
+// (E)
+class MiHebraPrimoDistCiclica extends Thread
+{
+    int miId, numHebras;
+    long[] vector;
+    MiHebraPrimoDistCiclica(int miId, int numHebras,  long[] vector)
+    {
+        this.miId = miId;
+        this.numHebras = numHebras;
+        this.vector = vector;
+    }
+
+    @Override
+    public void run() {
+        for(int i = miId; i < vector.length; i+= numHebras )
+        {
+            if( EjemploMuestraPrimosEnVector.esPrimo( vector[ i ] ) )
+            {
+                System.out.println( "  Encontrado primo: " + vector[ i ] );
+            }
+        }
+    }
+}
 
 // ===========================================================================
 class VectorNumeros {
