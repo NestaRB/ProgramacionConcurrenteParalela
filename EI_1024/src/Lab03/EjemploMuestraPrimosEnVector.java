@@ -1,5 +1,7 @@
 package Lab03;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 // ===========================================================================
 public class EjemploMuestraPrimosEnVector {
 // ===========================================================================
@@ -7,7 +9,7 @@ public class EjemploMuestraPrimosEnVector {
   public static void main( String args[] ) {
     int     numHebras, vectOpt;
     boolean option = true;
-    long    t1, t2, t3, t4;
+    long    t1, t2, t3, t4, t5, t6;
     double  ts, tc, tb, td;
 
     // Comprobacion y extraccion de los argumentos de entrada.
@@ -117,7 +119,32 @@ public class EjemploMuestraPrimosEnVector {
     //
     // Implementacion paralela dinamica.
     //
-    // (D) ....
+      System.out.println( "" );
+      System.out.println( "Implementacion paralela dinamica." );
+      t5 = System.nanoTime();
+      // Gestion de hebras para la implementacion paralela dinamica
+      AtomicInteger index = new AtomicInteger(0);
+      MiHebraPrimoDistDinamica[] vh3 = new MiHebraPrimoDistDinamica[numHebras];
+      for(int i = 0; i < numHebras; i++)
+      {
+          vh3[i] = new MiHebraPrimoDistDinamica( index, vectorTrabajo );
+          vh3[i].start();
+      }
+      for( int i = 0; i < numHebras; i++ )
+      {
+          try
+          {
+              vh3[i].join();
+          }
+          catch(InterruptedException ex)
+          {
+              ex.printStackTrace();
+          }
+      }
+      t6 = System.nanoTime();
+      td = ( ( double ) ( t6 - t5 ) ) / 1.0e9;
+      System.out.println( "Tiempo paralela dinamica (seg.):              " + td );
+      System.out.println( "Incremento paralela dinamica:                 " + td/ts ); // (B)
 
   }
 
@@ -178,6 +205,29 @@ class MiHebraPrimoDistPorBloques extends Thread
     {
         for( int i = inicio; i < fin ; i++ )
         {
+            if( EjemploMuestraPrimosEnVector.esPrimo( vector[ i ] ) )
+            {
+                System.out.println( "  Encontrado primo: " + vector[ i ] );
+            }
+        }
+    }
+}
+
+class MiHebraPrimoDistDinamica extends Thread
+{
+    AtomicInteger index;
+    long[] vector;
+    MiHebraPrimoDistDinamica(AtomicInteger index, long[] vector)
+    {
+        this.index = index;
+        this.vector = vector;
+    }
+
+    @Override
+    public void run() {
+        while( index.get() < vector.length )
+        {
+            int i = index.getAndIncrement();
             if( EjemploMuestraPrimosEnVector.esPrimo( vector[ i ] ) )
             {
                 System.out.println( "  Encontrado primo: " + vector[ i ] );
