@@ -83,7 +83,7 @@ public class EjemploMuestraPrimosEnVector {
     t2 = System.nanoTime();
     tc = ( ( double ) ( t2 - t1 ) ) / 1.0e9;
     System.out.println( "Tiempo paralela ciclica (seg.):              " + tc );
-    System.out.println( "Incremento paralela ciclica:                 " + tc/ts ); // (B)
+    System.out.println( "Incremento paralela ciclica:                 " + ts/tc ); // (B)
 
     //
     // Implementacion paralela por bloques.
@@ -115,7 +115,7 @@ public class EjemploMuestraPrimosEnVector {
       t4 = System.nanoTime();
       tb = ( ( double ) ( t4 - t3 ) ) / 1.0e9;
       System.out.println( "Tiempo paralela bloque (seg.):              " + tb );
-      System.out.println( "Incremento paralela bloque:                 " + tb/ts ); // (B)
+      System.out.println( "Incremento paralela bloque:                 " + ts/tb ); // (B)
     //
     // Implementacion paralela dinamica.
     //
@@ -144,7 +144,7 @@ public class EjemploMuestraPrimosEnVector {
       t6 = System.nanoTime();
       td = ( ( double ) ( t6 - t5 ) ) / 1.0e9;
       System.out.println( "Tiempo paralela dinamica (seg.):              " + td );
-      System.out.println( "Incremento paralela dinamica:                 " + td/ts ); // (B)
+      System.out.println( "Incremento paralela dinamica:                 " + ts/td ); // (B)
 
   }
 
@@ -225,9 +225,10 @@ class MiHebraPrimoDistDinamica extends Thread
 
     @Override
     public void run() {
-        while( index.get() < vector.length )
+        int i;
+        while( (i = index.getAndIncrement()) < vector.length )
         {
-            int i = index.getAndIncrement();
+
             if( EjemploMuestraPrimosEnVector.esPrimo( vector[ i ] ) )
             {
                 System.out.println( "  Encontrado primo: " + vector[ i ] );
