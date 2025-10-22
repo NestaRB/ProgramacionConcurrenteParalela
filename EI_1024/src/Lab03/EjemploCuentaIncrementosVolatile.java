@@ -1,7 +1,7 @@
 package Lab03;
 
 // ============================================================================
-class CuentaIncrementos {
+class CuentaIncrementosVolatile {
     // ============================================================================
     int numIncrementos = 0;
     
@@ -18,13 +18,13 @@ class CuentaIncrementos {
 
 
 // ============================================================================
-class MiHebra extends Thread {
+class MiHebraVolatile extends Thread {
     // ============================================================================
-    int                numIters;
-    CuentaIncrementos c;
+    volatile int numIters;
+    CuentaIncrementosVolatile c;
     
     // --------------------------------------------------------------------------
-    public MiHebra( int numIters, CuentaIncrementos c ) {
+    public MiHebraVolatile(int numIters, CuentaIncrementosVolatile c ) {
         this.numIters = numIters;
         this.c        = c;
     }
@@ -38,7 +38,7 @@ class MiHebra extends Thread {
 }
 
 // ============================================================================
-class EjemploCuentaIncrementos {
+class EjemploCuentaIncrementosVolatile {
     // ============================================================================
     
     // --------------------------------------------------------------------------
@@ -72,10 +72,10 @@ class EjemploCuentaIncrementos {
         
         System.out.println( "Creando y arrancando " + numHebras + " hebras." );
         t1 = System.nanoTime();
-        MiHebra v[] = new MiHebra[ numHebras ];
-        CuentaIncrementos c = new CuentaIncrementos();
+        MiHebraVolatile v[] = new MiHebraVolatile[ numHebras ];
+        CuentaIncrementosVolatile c = new CuentaIncrementosVolatile();
         for( int i = 0; i < numHebras; i++ ) {
-            v[ i ] = new MiHebra( numIters, c );
+            v[ i ] = new MiHebraVolatile( numIters, c );
             v[ i ].start();
         }
         for( int i = 0; i < numHebras; i++ ) {

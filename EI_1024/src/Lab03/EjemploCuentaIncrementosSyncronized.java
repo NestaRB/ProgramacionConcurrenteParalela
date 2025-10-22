@@ -1,34 +1,34 @@
 package Lab03;
 
 // ============================================================================
-class CuentaIncrementos {
+class CuentaIncrementosSynchronized {
     // ============================================================================
     int numIncrementos = 0;
-    
+
     // --------------------------------------------------------------------------
-    void incrementaNumIncrementos() {
+    synchronized void incrementaNumIncrementos() {
         numIncrementos++;
     }
-    
+
     // --------------------------------------------------------------------------
-    int dameNumIncrementos() {
+    synchronized int dameNumIncrementos() {
         return( numIncrementos );
     }
 }
 
 
 // ============================================================================
-class MiHebra extends Thread {
+class MiHebraSynchronized extends Thread {
     // ============================================================================
     int                numIters;
-    CuentaIncrementos c;
-    
+    CuentaIncrementosSynchronized c;
+
     // --------------------------------------------------------------------------
-    public MiHebra( int numIters, CuentaIncrementos c ) {
+    public MiHebraSynchronized(int numIters, CuentaIncrementosSynchronized c ) {
         this.numIters = numIters;
         this.c        = c;
     }
-    
+
     // --------------------------------------------------------------------------
     public void run() {
         for( int i = 0; i < numIters; i++ ) {
@@ -38,15 +38,15 @@ class MiHebra extends Thread {
 }
 
 // ============================================================================
-class EjemploCuentaIncrementos {
+class EjemploCuentaIncrementosSynchronized {
     // ============================================================================
-    
+
     // --------------------------------------------------------------------------
     public static void main( String args[] ) {
         long    t1, t2;
         double  tt;
         int     numHebras, numIters;
-        
+
         // Comprobacion y extraccion de los argumentos de entrada.
         if( args.length != 2 ) {
             System.err.println( "Uso: java programa <numHebras> <numIters>" );
@@ -66,16 +66,16 @@ class EjemploCuentaIncrementos {
             System.out.println( "ERROR: Argumentos numericos incorrectos." );
             System.exit( -1 );
         }
-        
+
         System.out.println( "numHebras: " + numHebras );
         System.out.println( "numIters : " + numIters );
-        
+
         System.out.println( "Creando y arrancando " + numHebras + " hebras." );
         t1 = System.nanoTime();
-        MiHebra v[] = new MiHebra[ numHebras ];
-        CuentaIncrementos c = new CuentaIncrementos();
+        MiHebraSynchronized v[] = new MiHebraSynchronized[ numHebras ];
+        CuentaIncrementosSynchronized c = new CuentaIncrementosSynchronized();
         for( int i = 0; i < numHebras; i++ ) {
-            v[ i ] = new MiHebra( numIters, c );
+            v[ i ] = new MiHebraSynchronized( numIters, c );
             v[ i ].start();
         }
         for( int i = 0; i < numHebras; i++ ) {

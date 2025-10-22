@@ -1,30 +1,14 @@
 package Lab03;
 
-// ============================================================================
-class CuentaIncrementos {
-    // ============================================================================
-    int numIncrementos = 0;
-    
-    // --------------------------------------------------------------------------
-    void incrementaNumIncrementos() {
-        numIncrementos++;
-    }
-    
-    // --------------------------------------------------------------------------
-    int dameNumIncrementos() {
-        return( numIncrementos );
-    }
-}
+import java.util.concurrent.atomic.AtomicInteger;
 
-
-// ============================================================================
-class MiHebra extends Thread {
+class MiHebraAtomic extends Thread {
     // ============================================================================
     int                numIters;
-    CuentaIncrementos c;
+    AtomicInteger c;
     
     // --------------------------------------------------------------------------
-    public MiHebra( int numIters, CuentaIncrementos c ) {
+    public MiHebraAtomic(int numIters, AtomicInteger c ) {
         this.numIters = numIters;
         this.c        = c;
     }
@@ -32,13 +16,13 @@ class MiHebra extends Thread {
     // --------------------------------------------------------------------------
     public void run() {
         for( int i = 0; i < numIters; i++ ) {
-            c.incrementaNumIncrementos();
+            c.getAndIncrement();
         }
     }
 }
 
 // ============================================================================
-class EjemploCuentaIncrementos {
+class EjemploCuentaIncrementosAtomic {
     // ============================================================================
     
     // --------------------------------------------------------------------------
@@ -72,10 +56,10 @@ class EjemploCuentaIncrementos {
         
         System.out.println( "Creando y arrancando " + numHebras + " hebras." );
         t1 = System.nanoTime();
-        MiHebra v[] = new MiHebra[ numHebras ];
-        CuentaIncrementos c = new CuentaIncrementos();
+        MiHebraAtomic v[] = new MiHebraAtomic[ numHebras ];
+        AtomicInteger c = new AtomicInteger();
         for( int i = 0; i < numHebras; i++ ) {
-            v[ i ] = new MiHebra( numIters, c );
+            v[ i ] = new MiHebraAtomic( numIters, c );
             v[ i ].start();
         }
         for( int i = 0; i < numHebras; i++ ) {
@@ -87,7 +71,7 @@ class EjemploCuentaIncrementos {
         }
         t2 = System.nanoTime();
         tt = ( ( double ) ( t2 - t1 ) ) / 1.0e9;
-        System.out.println( "Total de incrementos: " + c.dameNumIncrementos() );
+        System.out.println( "Total de incrementos: " + c.get() );
         System.out.println( "Tiempo transcurrido en segs.: " + tt );
     }
 }
