@@ -2,30 +2,31 @@ package Lab04;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.concurrent.atomic.AtomicLong;
 import javax.swing.*;
 import javax.swing.event.*;
 
-/*
+
 // ===========================================================================
 class ZonaIntercambio {
 // ===========================================================================
-  // ...
+  AtomicLong tiempoEspera;
 
-	public ZonaIntercambio ( ... ) {
-    // ...
+	public ZonaIntercambio (  ) {
+      tiempoEspera = new AtomicLong(500);
   }
 
   // -------------------------------------------------------------------------
-  void setTiempo( ... ) {
-    // ...
+  void setTiempo( long tiempo ) {
+    this.tiempoEspera.set(tiempo);
   }
 
   // -------------------------------------------------------------------------
-  long getTiempo( ... ) {
-    // ...
+  long getTiempo() {
+    return this.tiempoEspera.get();
   }
 }
-*/
+
 
 // ===========================================================================
 public class GUISecuenciaPrimos {
@@ -36,7 +37,7 @@ public class GUISecuenciaPrimos {
   JButton     btnIniciaSecuencia, btnCancelaSecuencia;
   JSlider     sldEspera;
   HebraTrabajadora  t; // Ejercicio 2.2
-//  ZonaIntercambio   z; // Ejercicio 2.3
+  ZonaIntercambio   z; // Ejercicio 2.3
   
   // -------------------------------------------------------------------------
   public static void main( String args[] ) {
@@ -53,6 +54,7 @@ public class GUISecuenciaPrimos {
     // Constantes.
     final int valorMaximo = 1000;
     final int valorMedio  = 500;
+    z = new ZonaIntercambio();
 
     // Variables.
     JPanel  tempPanel;
@@ -100,7 +102,7 @@ public class GUISecuenciaPrimos {
           btnIniciaSecuencia.setEnabled(false);
           btnCancelaSecuencia.setEnabled(true);
 
-          t = new HebraTrabajadora(txfMensajes);
+          t = new HebraTrabajadora(txfMensajes, z);
           t.start();
         }
     } );
@@ -125,7 +127,8 @@ public class GUISecuenciaPrimos {
         if ( ! sl.getValueIsAdjusting() ) {
           long tiempoEnMilisegundos = ( long ) sl.getValue();
           System.out.println( "JSlider value = " + tiempoEnMilisegundos );
-          // ...
+          z.setTiempo(tiempoEnMilisegundos);
+
         }
       }
     } );

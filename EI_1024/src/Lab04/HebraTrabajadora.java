@@ -8,8 +8,11 @@ public class HebraTrabajadora extends Thread {
     private boolean fin = false;
     private JTextField txfMensaje;
 
-    public HebraTrabajadora(JTextField txfMensajes) {
+    private ZonaIntercambio z;
+
+    public HebraTrabajadora(JTextField txfMensajes, ZonaIntercambio z) {
         this.txfMensaje = txfMensajes;
+        this.z = z;
     }
     public void parar() {
         fin = true;
@@ -23,7 +26,11 @@ public class HebraTrabajadora extends Thread {
                 final long finalI = i;
                 SwingUtilities.invokeLater( () ->
                         txfMensaje.setText(Long.valueOf(finalI).toString()));
-                //espera (ejer 2.3)
+                try {
+                    sleep(z.getTiempo());
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
             i++;
