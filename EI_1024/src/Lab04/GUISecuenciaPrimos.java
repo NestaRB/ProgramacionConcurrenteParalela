@@ -35,7 +35,7 @@ public class GUISecuenciaPrimos {
   JTextField  txfMensajes;
   JButton     btnIniciaSecuencia, btnCancelaSecuencia;
   JSlider     sldEspera;
-//  HebraTrabajadora  t; // Ejercicio 2.2
+  HebraTrabajadora  t; // Ejercicio 2.2
 //  ZonaIntercambio   z; // Ejercicio 2.3
   
   // -------------------------------------------------------------------------
@@ -99,6 +99,9 @@ public class GUISecuenciaPrimos {
         public void actionPerformed( ActionEvent e ) {
           btnIniciaSecuencia.setEnabled(false);
           btnCancelaSecuencia.setEnabled(true);
+
+          t = new HebraTrabajadora(txfMensajes);
+          t.start();
         }
     } );
 
@@ -107,6 +110,11 @@ public class GUISecuenciaPrimos {
         public void actionPerformed( ActionEvent e ) {
           btnCancelaSecuencia.setEnabled(false);
           btnIniciaSecuencia.setEnabled(true);
+
+          // Detener la hebra trabajadora
+          if (t != null) {
+            t.parar();
+          }
         }
     } );
 
