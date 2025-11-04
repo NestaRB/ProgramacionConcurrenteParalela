@@ -1,11 +1,12 @@
 package Lab05;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 // ============================================================================
-public class GUITiroAlBlanco {
+public class GUITiroAlBlancoUnaHebra {
   // ============================================================================
   
   // Declaracion de constantes (para tamanyos de ventana).
@@ -374,7 +375,7 @@ public class GUITiroAlBlanco {
 }
 
 // ============================================================================
-class CanvasCampoTiro extends Canvas {
+class CanvasCampoTiroUnaHebra extends Canvas {
   // ============================================================================
   
   // Declaracion de constantes.
@@ -447,20 +448,20 @@ class CanvasCampoTiro extends Canvas {
 }
 
 // ============================================================================
-class NuevoDisparo {
+class NuevoDisparoUnaHebra {
   // ============================================================================
   
   final double velocidadInicial, anguloInicial;
   
   // --------------------------------------------------------------------------
-  public NuevoDisparo( double velocidadInicial, double anguloInicial ) {
+  public NuevoDisparoUnaHebra(double velocidadInicial, double anguloInicial ) {
     this.velocidadInicial = velocidadInicial;
     this.anguloInicial  = anguloInicial;
   }
 }
 
 // ============================================================================
-class Proyectil {
+class ProyectilUnaHebra {
   // ============================================================================
   
   // Declaracion de constantes.
@@ -479,8 +480,8 @@ class Proyectil {
 /* =========   FIN  CODIGO A ANALIZAR EN EJERCICIO 2.c) y 5.a) ========== */
   
   // --------------------------------------------------------------------------
-  Proyectil( double velocidadInicial, double anguloInicial,
-        CanvasCampoTiroUnaHebra cnvCampoTiro ) {
+  ProyectilUnaHebra(double velocidadInicial, double anguloInicial,
+                    CanvasCampoTiroUnaHebra cnvCampoTiro ) {
     this.posX     = 0.0;
     this.posY     = 0.0;
     this.anguloRad  = anguloInicial * TO_RAD;
