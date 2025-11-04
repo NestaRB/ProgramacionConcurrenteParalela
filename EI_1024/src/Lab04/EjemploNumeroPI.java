@@ -218,7 +218,9 @@ class EjemploNumeroPI {
         try {
             vh1[i].join();
         }
-        catch( InterruptedException ex ) {}
+        catch( InterruptedException ex ) {
+            ex.printStackTrace();
+        }
     }
     pi = a.dameDato();
 
@@ -250,7 +252,9 @@ class EjemploNumeroPI {
       try {
           vh2[i].join();
       }
-      catch( InterruptedException ex ) {}
+      catch( InterruptedException ex ) {
+          ex.printStackTrace();
+      }
     }
     pi = a.dameDato();
 
@@ -282,7 +286,9 @@ class EjemploNumeroPI {
       try {
           vh3[i].join();
       }
-      catch( InterruptedException ex ) {}
+      catch( InterruptedException ex ) {
+          ex.printStackTrace();
+      }
     }
     pi = adder.sum();
 
@@ -314,7 +320,9 @@ class EjemploNumeroPI {
       try {
           vh4[i].join();
       }
-      catch( InterruptedException ex ) {}
+      catch( InterruptedException ex ) {
+          ex.printStackTrace();
+      }
     }
     pi = adder.sum();
 
