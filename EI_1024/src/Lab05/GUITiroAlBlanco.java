@@ -467,10 +467,6 @@ class Proyectil {
                             intPosXOld, intPosYOld);
                 }
             });
-
-
-            cnvCampoTiro.dibujaProyectil( intPosX, intPosY,
-                    intPosXOld, intPosYOld );
             /* =========   FIN  CODIGO A ANALIZAR EN EJERCICIO 2.d) ========== */
         }
     }

@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.SynchronousQueue;
 
 // ============================================================================
 public class GUITiroAlBlancoUnaHebra {
@@ -26,10 +27,10 @@ public class GUITiroAlBlancoUnaHebra {
     Point objetivo;
     static int numIters;
   MiHebraCalculadora                hebra ; // Ejercicio 4
-  LinkedBlockingQueue<NuevoDisparo> listaD; // Ejercicio 4
+  LinkedBlockingQueue<NuevoDisparoUnaHebra> listaD; // Ejercicio 4
 
     // --------------------------------------------------------------------------
-    public static void main(String args[]) {
+    public static void main(String args[]) throws InterruptedException {
 /*
     try {
       numIters = Integer.parseInt( args[ 0 ] );
@@ -45,6 +46,10 @@ public class GUITiroAlBlancoUnaHebra {
 */
         GUITiroAlBlancoUnaHebra gui = new GUITiroAlBlancoUnaHebra();
         gui.go();
+        gui.listaD = new LinkedBlockingQueue<>();
+        gui.hebra = new MiHebraCalculadora(gui.listaD, gui);
+        gui.hebra.start();
+
     }
 
     // --------------------------------------------------------------------------
@@ -272,7 +277,7 @@ public class GUITiroAlBlancoUnaHebra {
                     ang = Double.parseDouble(txfAnguloInicial.getText().trim());
                     if ((0.0 <= ang) && (ang < 90) && (vel > 0)) {
                         txfInformacion.setText("Calculando y dibujando trayectoria...");
-                        creaYMueveProyectil(new NuevoDisparoUnaHebra(vel, ang));
+                        listaD.add(new NuevoDisparoUnaHebra(ang, vel));
                     } else {
                         txfInformacion.setText("ERROR: Datos incorrectos.");
                     }
@@ -361,8 +366,12 @@ public class GUITiroAlBlancoUnaHebra {
         // Muestra mensaje en el cuadro de texto de informacion.
 
         /* ========= INICIO CODIGO A ANALIZAR EN EJERCICIO 2.e) ========= */
-        String miMensaje = mensaje;
-        txfInformacion.setText(miMensaje);
+        final String miMensaje = mensaje;
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                txfInformacion.setText(miMensaje);
+            }
+        });
         /* =========   FIN  CODIGO A ANALIZAR EN EJERCICIO 2.e) ========== */
     }
 
@@ -524,8 +533,14 @@ class ProyectilUnaHebra {
         if ((this.intPosX != this.intPosXOld) ||
                 (this.intPosY != this.intPosYOld)) {
             /* ========= INICIO CODIGO A ANALIZAR EN EJERCICIO 2.d) ========= */
-            cnvCampoTiro.dibujaProyectil(intPosX, intPosY,
-                    intPosXOld, intPosYOld);
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run()
+                {
+                    // Este código se ejecutará de forma segura en el EDT
+                    cnvCampoTiro.dibujaProyectil(intPosX, intPosY,
+                            intPosXOld, intPosYOld);
+                }
+            });
             /* =========   FIN  CODIGO A ANALIZAR EN EJERCICIO 2.d) ========== */
         }
     }
