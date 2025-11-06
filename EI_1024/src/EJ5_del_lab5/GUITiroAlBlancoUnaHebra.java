@@ -1,6 +1,5 @@
 package EJ5_del_lab5;
 
-import Lab05.MiHebraCalculadora;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +25,7 @@ public class GUITiroAlBlancoUnaHebra {
     JButton btnDispara;
     Point objetivo;
     static int numIters;
-  Lab05.MiHebraCalculadora hebra ; // Ejercicio 4
+  MiHebraCalculadora hebra ; // Ejercicio 4
   LinkedBlockingQueue<NuevoDisparoUnaHebra> listaD; // Ejercicio 4
 
     // --------------------------------------------------------------------------
