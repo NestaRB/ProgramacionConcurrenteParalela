@@ -28,20 +28,7 @@ public class MiHebraCalculadora extends Thread {
                     //Anyadir el nuevo proyectil (p) a listaP .
                     listaP.add(p);
                 }
-                // Procesado de la lista local de proyectiles .
-//                for (ProyectilUnaHebra p : listaP) {
-//                    // Sea p el proyectil actual de listaP .
-//                    //Muestra en pantalla los datos del proyectil p.
-//                    p.imprimeEstadoProyectilEnConsola();
-//                    //Mueve un incremental de tiempo el proyectil p.
-//                    p.mueveUnIncremental();
-//                    //Actualiza en pantalla la posicion del proyectil p.
-//                    p.actualizaDibujoDeProyectil();
-//                    //Comprueba si el proyectil p ha impactado en el suelo .
-//                    if (gui.determinaEstadoProyectil(p)) {
-//                        listaP.remove(p);
-//                    }
-//                }
+
                 for(int i = listaP.size() - 1; i >= 0; i--)
                 {
                     ProyectilUnaHebra p = listaP.get(i);
