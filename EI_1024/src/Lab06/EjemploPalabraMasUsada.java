@@ -1,8 +1,10 @@
+package Lab06;
+
 import java.io.*;
 import java.util.*;
 
-// import java.util.concurrent.*;
-// import java.util.concurrent.atomic.*;
+ import java.util.concurrent.*;
+ import java.util.concurrent.atomic.*;
 // import java.util.Map;
 // import java.util.stream.*;
 // import java.util.function.*;
@@ -87,24 +89,81 @@ class EjemploPalabraMasUsada {
     System.out.println( "Num. elems. tabla hash: " + hmCuentaPalabras.size() );
     System.out.println();
 
-/*
+
     //
     // Implementacion paralela 1: Uso de synchronizedMap y cerrojo
     //
     t1 = System.nanoTime();
-    // ...
+
+    HashMap<String, Integer> hm = new HashMap<>(1000, 0.75F);
+    Map<String, Integer> maCuentaPalabras = Collections.synchronizedMap(hm);
+
+    MiHebra_1[] vh = new MiHebra_1[numHebras];
+    int tam = vectorLineas.size() / numHebras;
+    for(int i = 0; i < numHebras; i++){
+      int inicio = i * tam;
+      int fin = (i == numHebras - 1) ? vectorLineas.size() : (i + 1) * tam;
+
+      vh[i] = new MiHebra_1(vectorLineas, maCuentaPalabras, inicio, fin);
+      vh[i].start();
+    }
+
+    for( int i = 0; i < numHebras; i++){
+      try{
+        vh[i].join();
+      }catch (InterruptedException ex){
+        ex.printStackTrace();
+      }
+    }
+
+
     t2 = System.nanoTime();
     tp = ( ( double ) ( t2 - t1 ) ) / 1.0e9;
     System.out.print( "Implementacion paralela 1: " );
     imprimePalabraMasUsadaYVeces( maCuentaPalabras );
-    System.out.println( " Tiempo(s): " + tp  + " , Incremento " + ...);
-    System.out.println( "Num. elems. tabla hash: " + ... );
+    System.out.println( " Tiempo(s): " + tp  + " , Incremento " + ts/tp);
+    System.out.println( "Num. elems. tabla hash: " + maCuentaPalabras.size() );
     System.out.println();
 
     //
     // Implementacion paralela 2: Uso de Hashtable y cerrojo
-    // ...
+    //
+    t1 = System.nanoTime();
 
+    // 1. Inicialización: Se usa la clase Hashtable directamente
+    Hashtable<String, Integer> htCuentaPalabras = new Hashtable<>(1000, 0.75F);
+
+    // 2. Creación y ejecución de las hebras
+    MiHebra_2[] vh2 = new MiHebra_2[numHebras];
+    tam = vectorLineas.size() / numHebras;
+
+    for(int i = 0; i < numHebras; i++){
+        int inicio = i * tam;
+        int fin = (i == numHebras - 1) ? vectorLineas.size() : (i + 1) * tam;
+
+        vh2[i] = new MiHebra_2(vectorLineas, htCuentaPalabras, inicio, fin);
+        vh2[i].start();
+    }
+
+    // 3. Esperar a que todas las hebras terminen
+    for( int i = 0; i < numHebras; i++){
+        try{
+            vh2[i].join();
+        } catch (InterruptedException ex){
+            ex.printStackTrace();
+        }
+    }
+
+    t2 = System.nanoTime();
+    tp = ( ( double ) ( t2 - t1 ) ) / 1.0e9;
+
+    System.out.print( "Implementacion paralela 2: " );
+    imprimePalabraMasUsadaYVeces( htCuentaPalabras );
+    System.out.println( " Tiempo(s): " + tp  + " , Incremento " + ts/tp);
+    System.out.println( "Num. elems. tabla hash: " + htCuentaPalabras.size() );
+    System.out.println();
+
+/*
     //
     // Implementacion paralela 3: Uso de ConcurrentHashMap y cerrojo
     // ...
@@ -226,6 +285,73 @@ class EjemploPalabraMasUsada {
       i++;
     }
     System.out.println( "-----------------" );
+  }
+}
+
+class MiHebra_1 extends Thread{
+  Vector<String> palabras;
+  final Map<String, Integer> cuentaPalabras;
+  int inicio;
+  int fin;
+
+  public MiHebra_1(Vector<String> palabras, Map<String, Integer> mapa, int inicio, int fin) {
+    this.palabras = palabras;
+    this.cuentaPalabras = mapa;
+    this.inicio = inicio;
+    this.fin = fin;
+  }
+
+  @Override
+  public void run(){
+    String palabraActual;
+
+    for (int i = inicio; i < fin ; i++ ) {
+      String[] palabras = this.palabras.get(i).split( "\\W+" );
+
+      for( int j = 0; j < palabras.length; j++ ) {
+        palabraActual = palabras[ j ].trim();
+
+        if( palabraActual.length() > 0 ) {
+          synchronized (cuentaPalabras) {
+            Integer veces = cuentaPalabras.getOrDefault(palabraActual, 0);
+            cuentaPalabras.put(palabraActual, veces + 1);
+          }
+        }
+      }
+    }
+  }
+}
+
+class MiHebra_2 extends Thread {
+  final Vector<String> vectorLineas;
+  final Map<String, Integer> cuentaPalabras;
+  final int inicio;
+  final int fin;
+
+  public MiHebra_2(Vector<String> lineas, Map<String, Integer> mapa, int inicio, int fin) {
+    this.vectorLineas = lineas;
+    this.cuentaPalabras = mapa;
+    this.inicio = inicio;
+    this.fin = fin;
+  }
+
+  public void run(){
+    String palabraActual;
+    for (int i = inicio; i < fin ; i++ ) {
+
+      String[] palabras = vectorLineas.get(i).split( "\\W+" );
+
+      for( int j = 0; j < palabras.length; j++ ) {
+        palabraActual = palabras[ j ].trim();
+
+        if( palabraActual.length() > 0 ) {
+          synchronized (cuentaPalabras) {
+            Integer veces = cuentaPalabras.getOrDefault(palabraActual, 0);
+            cuentaPalabras.put(palabraActual, veces + 1);
+          }
+        }
+      }
+    }
   }
 }
 

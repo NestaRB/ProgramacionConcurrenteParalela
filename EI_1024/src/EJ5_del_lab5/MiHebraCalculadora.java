@@ -1,4 +1,4 @@
-package EJ5_del_lab5;
+/*package EJ5_del_lab5;
 
 import Lab01.MiHebraDaemonVirtual;
 
@@ -49,3 +49,4 @@ public class MiHebraCalculadora extends Thread {
         }
     }
 }
+*/
