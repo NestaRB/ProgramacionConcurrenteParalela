@@ -130,10 +130,10 @@ class EjemploPalabraMasUsada {
     //
     t1 = System.nanoTime();
 
-    // 1. Inicialización: Se usa la clase Hashtable directamente
+
     Hashtable<String, Integer> htCuentaPalabras = new Hashtable<>(1000, 0.75F);
 
-    // 2. Creación y ejecución de las hebras
+
     MiHebra_2[] vh2 = new MiHebra_2[numHebras];
     tam = vectorLineas.size() / numHebras;
 
@@ -145,7 +145,7 @@ class EjemploPalabraMasUsada {
         vh2[i].start();
     }
 
-    // 3. Esperar a que todas las hebras terminen
+
     for( int i = 0; i < numHebras; i++){
         try{
             vh2[i].join();
@@ -169,10 +169,10 @@ class EjemploPalabraMasUsada {
     // ...
     t1 = System.nanoTime();
 
-    // 1. Inicialización: Se usa la clase Hashtable directamente
+
     ConcurrentHashMap<String, Integer> chmCuentaPalabras = new ConcurrentHashMap<>(1000, 0.75F);
 
-    // 2. Creación y ejecución de las hebras
+
     MiHebra_3[] vh3 = new MiHebra_3[numHebras];
     tam = vectorLineas.size() / numHebras;
 
@@ -184,7 +184,7 @@ class EjemploPalabraMasUsada {
         vh3[i].start();
     }
 
-    // 3. Esperar a que todas las hebras terminen
+
     for( int i = 0; i < numHebras; i++){
         try{
             vh3[i].join();
@@ -207,10 +207,10 @@ class EjemploPalabraMasUsada {
     // ...
       t1 = System.nanoTime();
 
-      // 1. Inicialización: Se usa la clase Hashtable directamente
+
       ConcurrentHashMap<String, Integer> chmMergeCuentaPalabras = new ConcurrentHashMap<>(1000, 0.75F);
 
-      // 2. Creación y ejecución de las hebras
+
       MiHebra_4[] vh4 = new MiHebra_4[numHebras];
       tam = vectorLineas.size() / numHebras;
 
@@ -222,7 +222,7 @@ class EjemploPalabraMasUsada {
           vh4[i].start();
       }
 
-      // 3. Esperar a que todas las hebras terminen
+
       for( int i = 0; i < numHebras; i++){
           try{
               vh4[i].join();
@@ -244,10 +244,10 @@ class EjemploPalabraMasUsada {
     // ...
       t1 = System.nanoTime();
 
-      // 1. Inicialización: Se usa la clase Hashtable directamente
+
       ConcurrentHashMap<String, Integer> chmputIfAbsentCuentaPalabras = new ConcurrentHashMap<>(1000, 0.75F);
 
-      // 2. Creación y ejecución de las hebras
+
       MiHebra_5[] vh5 = new MiHebra_5[numHebras];
       tam = vectorLineas.size() / numHebras;
 
@@ -259,7 +259,7 @@ class EjemploPalabraMasUsada {
           vh5[i].start();
       }
 
-      // 3. Esperar a que todas las hebras terminen
+
       for( int i = 0; i < numHebras; i++){
           try{
               vh5[i].join();
@@ -281,10 +281,10 @@ class EjemploPalabraMasUsada {
     // ...
       t1 = System.nanoTime();
 
-      // 1. Inicialización: Se usa la clase Hashtable directamente
+
       ConcurrentHashMap<String, AtomicInteger> chmAtomicCuentaPalabras = new ConcurrentHashMap<>(1000, 0.75F);
 
-      // 2. Creación y ejecución de las hebras
+
       MiHebra_6[] vh6 = new MiHebra_6[numHebras];
       tam = vectorLineas.size() / numHebras;
 
@@ -296,7 +296,7 @@ class EjemploPalabraMasUsada {
           vh6[i].start();
       }
 
-      // 3. Esperar a que todas las hebras terminen
+
       for( int i = 0; i < numHebras; i++){
           try{
               vh6[i].join();
