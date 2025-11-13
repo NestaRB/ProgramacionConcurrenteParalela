@@ -365,6 +365,7 @@ class EjemploPalabraMasUsada {
                                            .filter( s -> (s.length() > 0) )
                                            .collect( groupingBy (s -> s, counting()));
      t2 = System.nanoTime();
+      tp = ( ( double ) ( t2 - t1 ) ) / 1.0e9;
       System.out.print( "Implementacion Stream 8: " );
       imprimePalabraMasUsadaYVecesLong( stCuentaPalabras );
       System.out.println( " Tiempo(s): " + tp  + " , Incremento " + ts/tp);
