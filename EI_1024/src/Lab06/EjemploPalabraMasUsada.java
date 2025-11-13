@@ -308,22 +308,52 @@ class EjemploPalabraMasUsada {
       t2 = System.nanoTime();
       tp = ( ( double ) ( t2 - t1 ) ) / 1.0e9;
 
-      Map<String, Integer> hmAtomicResultado = new HashMap<>(1000, 0.75F);
-      for(String clave : chmAtomicCuentaPalabras.keySet())
-      {
-          AtomicInteger valor = chmAtomicCuentaPalabras.get(clave);
-          hmAtomicResultado.put(clave, valor.get());
-      }
+
 
       System.out.print( "Implementacion paralela 6: " );
-      imprimePalabraMasUsadaYVeces( hmAtomicResultado );
+      imprimePalabraMasUsadaYVecesAtomic( chmAtomicCuentaPalabras );
       System.out.println( " Tiempo(s): " + tp  + " , Incremento " + ts/tp);
-      System.out.println( "Num. elems. tabla hash: " + hmAtomicResultado.size() );
+      System.out.println( "Num. elems. tabla hash: " + chmAtomicCuentaPalabras.size() );
       System.out.println();
     //
     // Implementacion paralela 7: Uso de CHM escalable con AtomicInteger y 256 niv.
     // ...
+      t1 = System.nanoTime();
 
+      // 1. Inicialización: Se usa la clase Hashtable directamente
+      ConcurrentHashMap<String, AtomicInteger> chmAtomicCuentaPalabras256 = new ConcurrentHashMap<>(1000, 0.75F, 256);
+
+      // 2. Creación y ejecución de las hebras
+      MiHebra_6[] vh7 = new MiHebra_6[numHebras];
+      tam = vectorLineas.size() / numHebras;
+
+      for(int i = 0; i < numHebras; i++){
+          int inicio = i * tam;
+          int fin = (i == numHebras - 1) ? vectorLineas.size() : (i + 1) * tam;
+
+          vh7[i] = new MiHebra_6(vectorLineas, chmAtomicCuentaPalabras256, inicio, fin);
+          vh7[i].start();
+      }
+
+      // 3. Esperar a que todas las hebras terminen
+      for( int i = 0; i < numHebras; i++){
+          try{
+              vh7[i].join();
+          } catch (InterruptedException ex){
+              ex.printStackTrace();
+          }
+      }
+
+      t2 = System.nanoTime();
+      tp = ( ( double ) ( t2 - t1 ) ) / 1.0e9;
+
+
+
+      System.out.print( "Implementacion paralela 7: " );
+      imprimePalabraMasUsadaYVecesAtomic( chmAtomicCuentaPalabras256 );
+      System.out.println( " Tiempo(s): " + tp  + " , Incremento " + ts/tp);
+      System.out.println( "Num. elems. tabla hash: " + chmAtomicCuentaPalabras256.size() );
+      System.out.println();
     //
     // Implementacion paralela 8: Uso de Streams
     // t1 = System.nanoTime();
@@ -397,6 +427,30 @@ class EjemploPalabraMasUsada {
     System.out.print( "( Palabra: '" + palabraMasUsada + "' " + 
                          "veces: " + numVecesPalabraMasUsada + " )" );
   }
+
+    static void imprimePalabraMasUsadaYVecesAtomic(
+            Map<String,AtomicInteger> cuentaPalabras ) {
+        Vector<Map.Entry> lista = new Vector<Map.Entry>( cuentaPalabras.entrySet() );
+
+        String palabraMasUsada = "";
+        int    numVecesPalabraMasUsada = 0;
+        // Calcula la palabra mas usada.
+        for( int i = 0; i < lista.size(); i++ ) {
+            String palabra = ( String ) lista.get( i ).getKey();
+            AtomicInteger numVecesAt = ( AtomicInteger ) lista.get( i ).getValue();
+            int numVeces = ( Integer ) numVecesAt.get();
+            if( i == 0 ) {
+                palabraMasUsada = palabra;
+                numVecesPalabraMasUsada = numVeces;
+            } else if( numVecesPalabraMasUsada < numVeces ) {
+                palabraMasUsada = palabra;
+                numVecesPalabraMasUsada = numVeces;
+            }
+        }
+        // Imprime resultado.
+        System.out.print( "( Palabra: '" + palabraMasUsada + "' " +
+                "veces: " + numVecesPalabraMasUsada + " )" );
+    }
 
   // --------------------------------------------------------------------------
   static void printCuentaPalabrasOrdenadas(
