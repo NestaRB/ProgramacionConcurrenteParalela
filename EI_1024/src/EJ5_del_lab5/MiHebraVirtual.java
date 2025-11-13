@@ -1,4 +1,4 @@
-package EJ5_del_lab5;
+/*package EJ5_del_lab5;
 
 public class MiHebraVirtual implements Runnable{
 
@@ -26,3 +26,4 @@ public class MiHebraVirtual implements Runnable{
     }
 
 }
+*/

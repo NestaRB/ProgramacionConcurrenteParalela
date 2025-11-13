@@ -1,4 +1,4 @@
-package EJ5_del_lab5;
+/*package EJ5_del_lab5;
 
 
 import javax.swing.*;
@@ -42,7 +42,7 @@ public class GUITiroAlBlancoUnaHebra {
       System.out.println( "ERROR: Numeros de entrada incorrectos." );
       System.exit( -1 );
     }
-*/
+
         GUITiroAlBlancoUnaHebra gui = new GUITiroAlBlancoUnaHebra();
         gui.go();
         gui.listaD = new LinkedBlockingQueue<>();
@@ -263,7 +263,7 @@ public class GUITiroAlBlancoUnaHebra {
                 this.objetivo.x + "," + this.objetivo.y);
         cnvCampoTiro.guardaCoordenadasObjetivo(this.objetivo);
 
-        /* ========= INICIO CODIGO A MODIFICAR EN EJERCICIO 2 ========== */
+        /* ========= INICIO CODIGO A MODIFICAR EN EJERCICIO 2 ==========
         // Anyade el codigo para procesar la pulsacion del boton "Dispara".
         btnDispara.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -285,7 +285,7 @@ public class GUITiroAlBlancoUnaHebra {
                 }
             }
         });
-        /* =========   FIN  CODIGO A ANALIZAR EN EJERCICIO 2 ============= */
+        /* =========   FIN  CODIGO A ANALIZAR EN EJERCICIO 2 =============
     }
 
     // --------------------------------------------------------------------------
@@ -364,14 +364,14 @@ public class GUITiroAlBlancoUnaHebra {
     void muestraMensajeEnCampoInformacion(String mensaje) {
         // Muestra mensaje en el cuadro de texto de informacion.
 
-        /* ========= INICIO CODIGO A ANALIZAR EN EJERCICIO 2.e) ========= */
+        /* ========= INICIO CODIGO A ANALIZAR EN EJERCICIO 2.e) =========
         final String miMensaje = mensaje;
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 txfInformacion.setText(miMensaje);
             }
         });
-        /* =========   FIN  CODIGO A ANALIZAR EN EJERCICIO 2.e) ========== */
+        /* =========   FIN  CODIGO A ANALIZAR EN EJERCICIO 2.e) ==========
     }
 
     // --------------------------------------------------------------------------
@@ -481,13 +481,13 @@ class ProyectilUnaHebra {
 
     // Declaracion de variables.
     CanvasCampoTiroUnaHebra cnvCampoTiro;
-    /* ========= INICIO CODIGO A ANALIZAR EN EJERCICIO 2.c) y 5.a) ========= */
+    /* ========= INICIO CODIGO A ANALIZAR EN EJERCICIO 2.c) y 5.a) =========
     // Posiciones, angulo y velocidades con precision doble.
     double posX, posY;
     double anguloRad, velX, velY;
     // Posiciones exactas enteras.
     int intPosX, intPosY, intPosXOld, intPosYOld;
-    /* =========   FIN  CODIGO A ANALIZAR EN EJERCICIO 2.c) y 5.a) ========== */
+    /* =========   FIN  CODIGO A ANALIZAR EN EJERCICIO 2.c) y 5.a) ==========
 
     // --------------------------------------------------------------------------
     ProyectilUnaHebra(double velocidadInicial, double anguloInicial,
@@ -531,7 +531,7 @@ class ProyectilUnaHebra {
         // distinta de la anterior.
         if ((this.intPosX != this.intPosXOld) ||
                 (this.intPosY != this.intPosYOld)) {
-            /* ========= INICIO CODIGO A ANALIZAR EN EJERCICIO 2.d) ========= */
+            /* ========= INICIO CODIGO A ANALIZAR EN EJERCICIO 2.d) =========
             SwingUtilities.invokeLater(new Runnable() {
                 public void run()
                 {
@@ -540,9 +540,10 @@ class ProyectilUnaHebra {
                             intPosXOld, intPosYOld);
                 }
             });
-            /* =========   FIN  CODIGO A ANALIZAR EN EJERCICIO 2.d) ========== */
+            /* =========   FIN  CODIGO A ANALIZAR EN EJERCICIO 2.d) ==========
         }
     }
 }
+*/
 
 
