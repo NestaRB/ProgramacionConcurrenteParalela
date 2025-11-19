@@ -118,7 +118,17 @@ class EjemploTemperaturaProvincia {
         //
         // Implementacion paralela: Thread Pool isTerminated.
         //
-        // ...
+        System.out.println();
+        t1 = System.nanoTime();
+        MaxMinPar = new PuebloMaximaMinimaPar();
+        obtenMayorDiferenciaDeFichero(nombreFichero, fecha, codProvincia, MaxMinSec, MaxMinPar,2, numHebras);
+        t2 = System.nanoTime();
+        tp = ((double) (t2 - t1)) / 1.0e9;
+        System.out.print("Implementacion paralela: ThreadPool isTerminated.     ");
+        System.out.println( " Tiempo(s): " + tp + " , Incremento: " + ts/tp );
+        System.out.println( "  Pueblo: " + MaxMinPar.damePueblo() +
+                          " , Maxima = " + MaxMinPar.dameTemperaturaMaxima() +
+                          " , Minima = " + MaxMinPar.dameTemperaturaMinima() );
 
         //
         // Implementacion paralela: Thread Pool con awaitTermination.
@@ -213,9 +223,20 @@ class EjemploTemperaturaProvincia {
                         trabajadores[i].join();
                     }
                     break;
+
                 case 2: // ThreadPools con isTerminated
-                    // ...
+                    exec = Executors.newFixedThreadPool(numHebras);
+
+                    while ((linea = br.readLine()) != null)
+                    {
+                        int codPueblo = Integer.parseInt(linea);
+                        exec.execute(new TareaTheradPool(fecha, codPueblo, MaxMinPar));
+                    }
+                    exec.shutdown();
+                    while(!exec.isTerminated()) {}
+
                     break;
+
                 case 3: // ThreadPools con awaitTermination
                     // ...
                     break;
@@ -501,5 +522,23 @@ class HebraTrabajadora extends Thread {
             }
 
         }
+    }
+}
+
+class TareaTheradPool implements Runnable
+{
+    private String fecha;
+    private int codPueblo;
+    private PuebloMaximaMinimaPar MaxMinPar;
+
+    public TareaTheradPool(String fecha, int codPueblo, PuebloMaximaMinimaPar MaxMinPar)
+    {
+        this.fecha = fecha;
+        this.codPueblo = codPueblo;
+        this.MaxMinPar = MaxMinPar;
+    }
+    public void run()
+    {
+        EjemploTemperaturaProvincia.ProcesaPuebloPar(fecha, codPueblo, MaxMinPar, false);
     }
 }
