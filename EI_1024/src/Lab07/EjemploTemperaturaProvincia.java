@@ -238,7 +238,19 @@ class EjemploTemperaturaProvincia {
                     break;
 
                 case 3: // ThreadPools con awaitTermination
-                    // ...
+                    exec = Executors.newFixedThreadPool(numHebras);
+
+                    while ((linea = br.readLine()) != null)
+                    {
+                        int codPueblo = Integer.parseInt(linea);
+                        exec.execute(new TareaTheradPool(fecha, codPueblo, MaxMinPar));
+                    }
+                    exec.shutdown();
+                    try {
+                        while ( !exec.awaitTermination(2L ,TimeUnit.SECONDS)) {}
+                        } catch ( InterruptedException ex ) {
+                        ex.printStackTrace() ;
+                        }
                     break;
                 case 4: // ThreadPools + con Future
                     // ...
