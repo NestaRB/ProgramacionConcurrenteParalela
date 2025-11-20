@@ -133,12 +133,32 @@ class EjemploTemperaturaProvincia {
         //
         // Implementacion paralela: Thread Pool con awaitTermination.
         //
-        // ...
+        System.out.println();
+        t1 = System.nanoTime();
+        MaxMinPar = new PuebloMaximaMinimaPar();
+        obtenMayorDiferenciaDeFichero(nombreFichero, fecha, codProvincia, MaxMinSec, MaxMinPar,3, numHebras);
+        t2 = System.nanoTime();
+        tp = ((double) (t2 - t1)) / 1.0e9;
+        System.out.print("Implementacion paralela: ThreadPool awaitTermination.     ");
+        System.out.println( " Tiempo(s): " + tp + " , Incremento: " + ts/tp );
+        System.out.println( "  Pueblo: " + MaxMinPar.damePueblo() +
+                " , Maxima = " + MaxMinPar.dameTemperaturaMaxima() +
+                " , Minima = " + MaxMinPar.dameTemperaturaMinima() );
 
         //
         // Implementacion paralela: Thread Pool con Future.
         //
-        // ...
+        System.out.println();
+        t1 = System.nanoTime();
+        MaxMinPar = new PuebloMaximaMinimaPar();
+        obtenMayorDiferenciaDeFichero(nombreFichero, fecha, codProvincia, MaxMinSec, MaxMinPar,4, numHebras);
+        t2 = System.nanoTime();
+        tp = ((double) (t2 - t1)) / 1.0e9;
+        System.out.print("Implementacion paralela: ThreadPool con Future.     ");
+        System.out.println( " Tiempo(s): " + tp + " , Incremento: " + ts/tp );
+        System.out.println( "  Pueblo: " + MaxMinPar.damePueblo() +
+                " , Maxima = " + MaxMinPar.dameTemperaturaMaxima() +
+                " , Minima = " + MaxMinPar.dameTemperaturaMinima() );
 
     }
 
@@ -253,8 +273,38 @@ class EjemploTemperaturaProvincia {
                         }
                     break;
                 case 4: // ThreadPools + con Future
-                    // ...
+                    Future<PuebloMaximaMinimaPar> f;
+                    exec = Executors.newFixedThreadPool ( numHebras ) ;
+                    ArrayList<Future<PuebloMaximaMinimaPar> > alf = new ArrayList <>() ;
+
+
+                    while ((linea = br.readLine()) != null)
+                    {
+                        int codPueblo = Integer.parseInt(linea);
+                        f = exec.submit(new TareaCallable(fecha, codPueblo));
+                        alf.add(f);
+                    }
+
+
+                    exec.shutdown();
+                    PuebloMaximaMinimaPar total = new PuebloMaximaMinimaPar();
+                    for ( int i = 0; i < alf.size() ; i ++ )
+                    {
+                        try {
+                            f = alf.get(i);
+                            PuebloMaximaMinimaPar local= f.get();
+                            total.actualizaMaxMin(local.damePueblo(), local.dameCodigo(), local.dameTemperaturaMinima(), local.dameTemperaturaMaxima());
+
+
+                            } catch ( ExecutionException ex ) {
+                            ex.printStackTrace () ;
+                            } catch ( InterruptedException ex ) {
+                            ex.printStackTrace () ;
+                            }
+                    }
+                    MaxMinPar = total;
                     break;
+
                 default:
                     break;
             }
@@ -552,5 +602,24 @@ class TareaTheradPool implements Runnable
     public void run()
     {
         EjemploTemperaturaProvincia.ProcesaPuebloPar(fecha, codPueblo, MaxMinPar, false);
+    }
+}
+
+class TareaCallable implements Callable < PuebloMaximaMinimaPar > {
+    private String fecha;
+    private int codPueblo;
+    private PuebloMaximaMinimaPar MaxMinPar;
+
+    public TareaCallable(String fecha, int codPueblo)
+    {
+        this.fecha = fecha;
+        this.codPueblo = codPueblo;
+        this.MaxMinPar = new PuebloMaximaMinimaPar();
+    }
+
+    public PuebloMaximaMinimaPar call()
+    {
+        EjemploTemperaturaProvincia.ProcesaPuebloPar(fecha, codPueblo, MaxMinPar, false);
+        return MaxMinPar;
     }
 }
