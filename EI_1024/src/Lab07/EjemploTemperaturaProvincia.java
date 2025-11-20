@@ -5,7 +5,7 @@ import java.net.*;
 import java.util.*;
 import java.util.concurrent.*;
 
-class EjemploTemperaturaProvincia {
+public class EjemploTemperaturaProvincia {
     public static void main(String[] args) {
         int numHebras, codProvincia, desp;
         String nombreFichero = "";
@@ -120,6 +120,7 @@ class EjemploTemperaturaProvincia {
         //
         System.out.println();
         t1 = System.nanoTime();
+        MaxMinSec = new PuebloMaximaMinimaSec();
         MaxMinPar = new PuebloMaximaMinimaPar();
         obtenMayorDiferenciaDeFichero(nombreFichero, fecha, codProvincia, MaxMinSec, MaxMinPar,2, numHebras);
         t2 = System.nanoTime();
@@ -135,6 +136,7 @@ class EjemploTemperaturaProvincia {
         //
         System.out.println();
         t1 = System.nanoTime();
+        MaxMinSec = new PuebloMaximaMinimaSec();
         MaxMinPar = new PuebloMaximaMinimaPar();
         obtenMayorDiferenciaDeFichero(nombreFichero, fecha, codProvincia, MaxMinSec, MaxMinPar,3, numHebras);
         t2 = System.nanoTime();
@@ -150,6 +152,7 @@ class EjemploTemperaturaProvincia {
         //
         System.out.println();
         t1 = System.nanoTime();
+        MaxMinSec = new PuebloMaximaMinimaSec();
         MaxMinPar = new PuebloMaximaMinimaPar();
         obtenMayorDiferenciaDeFichero(nombreFichero, fecha, codProvincia, MaxMinSec, MaxMinPar,4, numHebras);
         t2 = System.nanoTime();
@@ -287,13 +290,15 @@ class EjemploTemperaturaProvincia {
 
 
                     exec.shutdown();
-                    PuebloMaximaMinimaPar total = new PuebloMaximaMinimaPar();
+
+                    System.out.println("Size: " + alf.size());
                     for ( int i = 0; i < alf.size() ; i ++ )
                     {
                         try {
                             f = alf.get(i);
                             PuebloMaximaMinimaPar local= f.get();
-                            total.actualizaMaxMin(local.damePueblo(), local.dameCodigo(), local.dameTemperaturaMinima(), local.dameTemperaturaMaxima());
+                            System.out.println("Future: " + local.dameCodigo());
+                            MaxMinPar.actualizaMaxMin(local.damePueblo(), local.dameCodigo(), local.dameTemperaturaMaxima(), local.dameTemperaturaMinima());
 
 
                             } catch ( ExecutionException ex ) {
@@ -302,7 +307,6 @@ class EjemploTemperaturaProvincia {
                             ex.printStackTrace () ;
                             }
                     }
-                    MaxMinPar = total;
                     break;
 
                 default:
@@ -619,6 +623,7 @@ class TareaCallable implements Callable < PuebloMaximaMinimaPar > {
 
     public PuebloMaximaMinimaPar call()
     {
+        System.out.println("Tarea " + codPueblo);
         EjemploTemperaturaProvincia.ProcesaPuebloPar(fecha, codPueblo, MaxMinPar, false);
         return MaxMinPar;
     }
