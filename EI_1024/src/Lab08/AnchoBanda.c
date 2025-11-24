@@ -57,7 +57,14 @@ int main( int argc, char * argv[] ) {
 
   // Difusion del vector vecArgs con operaciones punto a punto.
   // ... (A)
-  
+    if (miId == 0) {
+        for (i = 1; i < numProcs; i++) {
+            MPI_Send(vecArgs, 5, MPI_INT, i, 33, MPI_COMM_WORLD);
+        }
+    } else {
+        MPI_Recv(vecArgs, 5, MPI_INT, 0, 33, MPI_COMM_WORLD, &s);
+    }
+
   // El resto de procesos inicializan las cinco variables con la 
   // informacion del vector. El proceso 0 no tiene que hacerlo porque
   // ya habia inicializado las variables.
