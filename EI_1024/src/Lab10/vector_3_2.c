@@ -145,15 +145,34 @@ int main( int argc, char *argv[] ) {
   MPI_Barrier( MPI_COMM_WORLD );
   // Inicio del calculo de la reduccion en paralelo y de su coste (tPar).
   // ... (E)
+  t1 = MPI_Wtime();
  
   // Cada proceso suma la aplicacion de la funcion sobre los elementos de vectorLocal
   // ... (F)
+  sumaLocal = 0.0;
+  for( i = 0; i < dimVectorLocal; i++ ) {
+    sumaLocal += evaluaFuncion(vectorLocal[i]);
+  }
 
   // Se acumulan las sumas locales de cada procesador en sumaFinal sobre el proceso 0
   // ... (G)
+  if( miId == 0 ) {
+    sumaFinal = sumaLocal;
+    double aux;
+
+    for (prc = 1; prc < numProcs; prc++) {
+      MPI_Recv(&aux, 1, MPI_DOUBLE, MPI_ANY_SOURCE, 33, MPI_COMM_WORLD, &st);
+      sumaFinal += aux;
+    }
+  } else {
+    MPI_Send(&sumaLocal, 1, MPI_DOUBLE, 0, 33, MPI_COMM_WORLD);
+  }
 
   // Finalizacion del calculo de la reduccion en paralelo y de su coste (tPar).
   // ... (H)
+  MPI_Barrier( MPI_COMM_WORLD );
+  t2 = MPI_Wtime();
+  tPar = t2 - t1;
 
   // El proceso 0 imprime la sumas, los costes y los incrementos
   if ( miId == 0) {
@@ -163,8 +182,11 @@ int main( int argc, char *argv[] ) {
     printf( "Proc: %d , tSec = %lf , tPar = %lf , tDis = %lf\n", 
                 miId, tSec, tPar, tDis);
     // Imprimir Incrementos(tSec vs tPar , tSec vs (tDis+tPar) )
-    // printf ( "Proc: %d , incSec_Par = %lf , incSec_DisPar = %lf\n",
     // ... (I)
+    double incSec_Par = tSec / tPar;
+    double incSec_DisPar = tSec / (tDis + tPar);
+    printf ( "Proc: %d , incSec_Par = %lf , incSec_DisPar = %lf\n", miId, incSec_Par, incSec_DisPar);
+
   }
 
   // El proceso 0 borra el vector inicial.
