@@ -19,7 +19,11 @@ int main( int argc, char * argv[] ) {
   printf( "Proc %d Dato vale: %d \n", miId, dato );
  
   // ... Incluir codigo asociado a los ejercicios 1 y 2
-  
+  MPI_Reduce(&dato, &suma, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+
+  if (miId == 0)
+    printf("La suma total vale: %d", suma);
+
   // --------------------------------------------------------------------------
 
   // Finalizacion de MPI.

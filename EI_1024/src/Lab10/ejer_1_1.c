@@ -14,12 +14,23 @@ int main( int argc, char * argv[] ) {
   // --------------------------------------------------------------------------
   int prc, suma, aux, dato;
   MPI_Status st;
+
   // Cada proceso dispone de un dato cualquiera.
   dato = numProcs - miId + 1;
   printf( "Proc %d Dato vale: %d \n", miId, dato );
  
   // ... Incluir codigo asociado a los ejercicios 1 y 2
-  
+  if (miId == 0) {
+    suma = dato;
+    for ( prc = 1; prc < numProcs; prc++ ) {
+      MPI_Recv(&aux, 1, MPI_INT, MPI_ANY_SOURCE, 33, MPI_COMM_WORLD, &st);
+      suma += aux;
+    }
+    printf("La suma total vale: %d", suma);
+  }
+  else {
+    MPI_Send(&dato, 1, MPI_INT, 0, 33, MPI_COMM_WORLD);
+  }
   // --------------------------------------------------------------------------
 
   // Finalizacion de MPI.
