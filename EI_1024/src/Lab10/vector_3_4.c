@@ -147,22 +147,8 @@ int main( int argc, char *argv[] ) {
 
   // Se acumulan las sumas locales de cada procesador en sumaFinal sobre el proceso 0
   // ... (G)
-  double *bufferLlegada = NULL;
+  MPI_Reduce(&sumaLocal, &sumaFinal, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
 
-  if (miId == 0) {
-    bufferLlegada = (double *) malloc( numProcs * sizeof( double ) );
-  }
-
-  MPI_Gather(&sumaLocal, 1, MPI_DOUBLE, bufferLlegada, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
-  if (miId == 0) {
-    sumaFinal = 0;
-    for (i = 0; i<numProcs; i++) {
-      sumaFinal += bufferLlegada[i];
-    }
-    free(bufferLlegada);
-    bufferLlegada = NULL;
-  }
   // Finalizacion del calculo de la reduccion en paralelo y de su coste (tPar).
   // ... (H)
   MPI_Barrier( MPI_COMM_WORLD );
