@@ -118,21 +118,12 @@ int main( int argc, char *argv[] ) {
   // ... (D)
   if (miId == 0) {
     t1 = MPI_Wtime();
-    for( i = 0; i < dimVectorLocal; i++ ) {
-      vectorLocal[i] = vectorInicial[i];
-    }
+  }
+  MPI_Scatter(vectorInicial, dimVectorLocal, MPI_DOUBLE, vectorLocal, dimVectorLocal, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
-    for (prc = 1; prc < numProcs; prc++) {
-      double *inicio = &vectorInicial[ prc * dimVectorLocal ];
-      MPI_Send(inicio, dimVectorLocal, MPI_DOUBLE, prc, 33, MPI_COMM_WORLD);
-    }
+  if (miId == 0) {
     tDis = MPI_Wtime() - t1;
   }
-  else {
-    MPI_Recv(vectorLocal, dimVectorLocal, MPI_DOUBLE, 0, 33, MPI_COMM_WORLD, &st);
-  }
-
-
 
 #ifdef IMPRIME
   // Todos los procesos imprimen su vector local.
@@ -156,18 +147,21 @@ int main( int argc, char *argv[] ) {
 
   // Se acumulan las sumas locales de cada procesador en sumaFinal sobre el proceso 0
   // ... (G)
-  if( miId == 0 ) {
-    sumaFinal = sumaLocal;
-    double aux;
+  double *bufferLlegada = NULL;
 
-    for (prc = 1; prc < numProcs; prc++) {
-      MPI_Recv(&aux, 1, MPI_DOUBLE, MPI_ANY_SOURCE, 33, MPI_COMM_WORLD, &st);
-      sumaFinal += aux;
-    }
-  } else {
-    MPI_Send(&sumaLocal, 1, MPI_DOUBLE, 0, 33, MPI_COMM_WORLD);
+  if (miId == 0) {
+    bufferLlegada = (double *) malloc( numProcs * sizeof( double ) );
   }
 
+  MPI_Gather(&sumaLocal, 1, MPI_DOUBLE, bufferLlegada, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+
+  if (miId == 0) {
+    sumaFinal = 0;
+    for (i = 0; i<numProcs; i++) {
+      sumaFinal += bufferLlegada[i];
+    }
+    free(bufferLlegada);
+  }
   // Finalizacion del calculo de la reduccion en paralelo y de su coste (tPar).
   // ... (H)
   MPI_Barrier( MPI_COMM_WORLD );
